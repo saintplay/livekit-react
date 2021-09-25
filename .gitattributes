@@ -1,0 +1,3 @@
+# Ignore yarn lock.
+yarn.lock linguist-generated
+example/yarn.lock linguist-generated

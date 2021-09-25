@@ -55,6 +55,16 @@ export const RoomPage = () => {
         token={token}
         onConnected={room => {
           onConnected(room, query);
+
+          // Adding these events here will make remote peers to not receive room Track Muted/Unmuted events.
+          // Remove them and RoomEvent Mute events are going to fire again.
+          room.localParticipant.onTrackMuted = (...args) => console.log("local track muted", ...args)
+          room.localParticipant.onTrackUnmuted = (...args) => console.log("local track unmuted", ...args)
+
+          // Note that I updated the livekit-client-sdk version to make these events fireable.
+          room.on(RoomEvent.TrackMuted, (...args) => console.log("room track muted", ...args))
+          room.on(RoomEvent.TrackUnmuted, (...args) => console.log("room track unmuted", ...args))
+
           room.on(RoomEvent.ParticipantConnected, () => updateParticipantSize(room))
           room.on(RoomEvent.ParticipantDisconnected, () => onParticipantDisconnected(room))
           updateParticipantSize(room);
